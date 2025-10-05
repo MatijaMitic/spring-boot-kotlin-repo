@@ -30,6 +30,18 @@
                     <wa-icon slot="start" name="pen-to-square"></wa-icon>
                     Edit
                 </wa-button>
+                <wa-button
+                        variant="danger"
+                        appearance="filled"
+                        size="small"
+                        th:attr="hx-delete=@{/products/{id}(id=${p.id})}"
+                        hx-target="body"
+                        hx-swap="none"
+                        hx-confirm="Delete this product permanently?"
+                        hx-indicator="#tableSpinner">
+                    <wa-icon slot="start" name="trash"></wa-icon>
+                    Delete
+                </wa-button>
             </td>
         </tr>
         </tbody>

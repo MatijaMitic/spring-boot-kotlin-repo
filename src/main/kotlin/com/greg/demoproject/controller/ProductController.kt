@@ -1,18 +1,21 @@
 package com.greg.demoproject.controller
 
 import com.greg.demoproject.repository.ProductRepository
+import com.greg.demoproject.repository.ProductVariantRepository
 import com.greg.demoproject.repository.entities.Product
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 import java.time.OffsetDateTime
 
 @Controller
-class ProductController(private val repo: ProductRepository) {
+class ProductController(private val repo: ProductRepository, private val variantRepo: ProductVariantRepository) {
 
     @GetMapping("/")
     fun home(model: Model): String {
@@ -45,6 +48,20 @@ class ProductController(private val repo: ProductRepository) {
 
         repo.save(updated) // id != null -> UPDATE in Spring Data JDBC
         return "redirect:/"
+    }
+
+    @ResponseBody
+    @GetMapping("/api/variants/availability", produces = ["application/json"])
+    fun isAvailable(@RequestParam sku: String): Boolean =
+        variantRepo.isAvailableBySku(sku.trim())
+
+    @DeleteMapping("/products/{id}")
+    fun deleteProduct(@PathVariable id: Long, model: Model): String {
+        repo.deleteById(id)   // FK to variants should be ON DELETE CASCADE
+        val items = repo.findAll()
+        model.addAttribute("items", items)
+        // Reuse the same OOB response that updates #productTable and #createForm
+        return "fragments/products_and_form :: oob(items=${'$'}{items})"
     }
 
     @GetMapping("/search")
