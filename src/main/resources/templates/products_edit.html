@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Edit product</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.6/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.6/dist/webawesome.loader.js"></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <wa-icon name="pen-to-square" style="font-size:1.25rem;"></wa-icon>
+        <h1>Edit product</h1>
+    </div>
+</header>
+
+<main class="page">
+    <wa-card with-header class="wa-border-radius-l">
+        <h2 slot="header" style="margin:0;">Update details</h2>
+
+        <form th:action="@{/products/{id}(id=${product.id})}" method="post"
+              class="wa-stack wa-gap-m" style="padding: var(--wa-space-m);">
+
+            <!-- Keep internal id as hidden just in case -->
+            <input type="hidden" name="id" th:value="${product.id}" />
+
+            <div class="wa-grid" style="grid-template-columns: 1fr 1fr; gap: var(--wa-space-m);">
+
+                <label class="wa-stack wa-gap-2xs">
+                    <span class="wa-label">External ID</span>
+                    <!-- readonly so it's submitted but not editable -->
+                    <input class="wa-input" name="externalId" th:value="${product.externalId}" readonly
+                           style="padding: var(--wa-space-s); border:1px solid var(--wa-color-border-quiet); border-radius: var(--wa-border-radius-m);" />
+                </label>
+
+                <label class="wa-stack wa-gap-2xs">
+                    <span class="wa-label">Name (max 30)</span>
+                    <input class="wa-input" name="name" maxlength="30" required
+                           th:value="${product.name}"
+                           style="padding: var(--wa-space-s); border:1px solid var(--wa-color-border-quiet); border-radius: var(--wa-border-radius-m);" />
+                </label>
+
+                <label class="wa-stack wa-gap-2xs">
+                    <span class="wa-label">Vendor</span>
+                    <input class="wa-input" name="vendor" th:value="${product.vendor}"
+                           style="padding: var(--wa-space-s); border:1px solid var(--wa-color-border-quiet); border-radius: var(--wa-border-radius-m);" />
+                </label>
+
+                <label class="wa-stack wa-gap-2xs">
+                    <span class="wa-label">Product type</span>
+                    <input class="wa-input" name="productType" th:value="${product.productType}"
+                           style="padding: var(--wa-space-s); border:1px solid var(--wa-color-border-quiet); border-radius: var(--wa-border-radius-m);" />
+                </label>
+            </div>
+
+            <div class="wa-flank:end wa-gap-s">
+                <wa-button as="a" th:href="@{/static}" variant="neutral" appearance="quiet">Cancel</wa-button>
+                <wa-button type="submit" variant="brand" appearance="accent">
+                    <wa-icon slot="start" name="floppy-disk"></wa-icon>
+                    Save changes
+                </wa-button>
+            </div>
+        </form>
+    </wa-card>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <small class="muted">&copy; <span th:text="${#dates.format(#dates.createNow(),'yyyy')}">2025</span> Greg’s products</small>
+    </div>
+</footer>
+</body>
+</html>

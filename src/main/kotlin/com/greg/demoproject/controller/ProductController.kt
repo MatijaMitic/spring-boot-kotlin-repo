@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.time.OffsetDateTime
@@ -16,6 +17,34 @@ class ProductController(private val repo: ProductRepository) {
     @GetMapping("/")
     fun home(model: Model): String {
         return "index"
+    }
+
+    @GetMapping("/products/{id}/edit")
+    fun editPage(@PathVariable id: Long, model: Model): String {
+        val product = repo.findById(id).orElseThrow { NoSuchElementException("Product $id not found") }
+        model.addAttribute("product", product)
+        return "products_edit"
+    }
+
+    @PostMapping("/products/{id}")
+    fun updateProduct(
+        @PathVariable id: Long,
+        @ModelAttribute form: EditProductForm
+    ): String {
+        val existing = repo.findById(id).orElseThrow { NoSuchElementException("Product $id not found") }
+
+        val updated = existing.copy(
+            // externalId comes from the form (readonly), keep as is:
+            externalId = form.externalId,
+            name = form.name.take(30),
+            vendor = form.vendor,
+            productType = form.productType,
+            updatedAt = OffsetDateTime.now()
+            // variants = existing.variants (unchanged)
+        )
+
+        repo.save(updated) // id != null -> UPDATE in Spring Data JDBC
+        return "redirect:/"
     }
 
     @GetMapping("/search")
@@ -66,6 +95,14 @@ class ProductController(private val repo: ProductRepository) {
     }
 
     data class ProductForm(
+        val externalId: Long,
+        val name: String,
+        val vendor: String? = null,
+        val productType: String? = null
+    )
+
+    data class EditProductForm(
+        val id: Long? = null,         // not strictly needed; we use path variable
         val externalId: Long,
         val name: String,
         val vendor: String? = null,
