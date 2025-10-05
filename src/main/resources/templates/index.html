@@ -1,0 +1,52 @@
+<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Greg's products</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.6/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.6/dist/webawesome.loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <wa-icon name="boxes-stacked" style="font-size:1.25rem;"></wa-icon>
+        <h1>Greg's products</h1>
+    </div>
+</header>
+
+<main class="page wa-stack wa-gap-l">
+    <wa-card with-header class="wa-border-radius-l">
+        <div>
+            <wa-button
+                    variant="brand"
+                    appearance="accent"
+                    size="large"
+                    hx-get="/products/fragment"
+                    hx-target="body"
+                    hx-swap="none"
+                    hx-indicator="#loadSpinner"
+            >
+                <wa-icon slot="start" name="arrow-rotate-right"></wa-icon>
+                Load products
+            </wa-button>
+        </div>
+        <div class="wa-stack wa-gap-xl" style="padding: var(--wa-space-m);">
+            <div id="productList" style="padding: var(--wa-space-m);"></div>
+            <div id="createForm" class="card-body" style="padding: var(--wa-space-m);"></div>
+        </div>
+    </wa-card>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <small class="muted">
+            &copy; <span th:text="${#dates.format(#dates.createNow(),'yyyy')}">2025</span> Greg’s products
+        </small>
+    </div>
+</footer>
+</body>
+</html>

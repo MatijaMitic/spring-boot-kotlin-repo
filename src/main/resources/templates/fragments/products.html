@@ -1,0 +1,25 @@
+<!-- templates/fragments/products.html -->
+<th:block th:fragment="table (items)">
+    <table class="product-table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Vendor</th>
+            <th>Type</th>
+            <th>Variants</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${items}">
+            <td>
+                <div class="wa-stack wa-gap-3xs">
+                    <strong th:text="${p.name}">Title</strong>
+                </div>
+            </td>
+            <td th:text="${p.vendor}">Vendor</td>
+            <td th:text="${p.productType}">Type</td>
+            <td th:text="${#lists.size(p.variants)} + ' variants'">0 variants</td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>

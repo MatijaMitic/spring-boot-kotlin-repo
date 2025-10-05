@@ -1,0 +1,19 @@
+<!-- templates/fragments/products_and_form.html -->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<!-- Expose as a Thymeleaf fragment that accepts 'items' -->
+<th:block th:fragment="oob (items)">
+
+    <!-- Update the table target out-of-band -->
+    <div id="productList" hx-swap-oob="true">
+        <th:block th:insert="fragments/products :: table(items=${items})"></th:block>
+    </div>
+
+    <!-- Update the form target out-of-band -->
+    <div id="createForm" hx-swap-oob="true">
+        <th:block th:insert="fragments/create_product :: form"></th:block>
+    </div>
+
+</th:block>
+</body>
+</html>
