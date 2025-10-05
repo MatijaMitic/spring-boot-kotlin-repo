@@ -1,0 +1,34 @@
+<!-- src/main/resources/templates/fragments/search_results.html -->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<th:block th:fragment="results (items, q)">
+    <div class="wa-stack wa-gap-s">
+        <div class="muted" th:if="${q != null}">
+            <small th:text="'Query: “' + ${q} + '” — ' + ${#lists.size(items)} + ' result(s)'">Query: "" — 0 result(s)</small>
+        </div>
+
+        <table class="product-table" th:if="${!#lists.isEmpty(items)}">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Vendor</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${items}">
+                <td th:text="${p.name}">Name</td>
+                <td th:text="${p.vendor}">Vendor</td>
+                <td th:text="${p.productType}">Type</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <wa-callout class="wa-warning" appearance="plain" th:if="${#lists.isEmpty(items)}">
+            <wa-icon slot="icon" name="triangle-exclamation"></wa-icon>
+            No products match your query.
+        </wa-callout>
+    </div>
+</th:block>
+</body>
+</html>

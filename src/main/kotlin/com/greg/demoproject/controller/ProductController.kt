@@ -7,6 +7,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import java.time.OffsetDateTime
 
 @Controller
@@ -15,6 +16,25 @@ class ProductController(private val repo: ProductRepository) {
     @GetMapping("/")
     fun home(model: Model): String {
         return "index"
+    }
+
+    @GetMapping("/search")
+    fun searchPage(): String = "search"
+
+    // HTMX results fragment (returns only the table/list)
+    @GetMapping("/products/search")
+    fun searchProducts(
+        @RequestParam("q", required = false, defaultValue = "") q: String,
+        model: Model
+    ): String {
+        val term = q.trim()
+        val items: List<Product> =
+            if (term.isBlank()) emptyList()
+            else repo.findByNameContainingIgnoreCase(term) // or repo.findByNameContainingIgnoreCase(term)
+
+        model.addAttribute("items", items)
+        model.addAttribute("q", term)
+        return "fragments/search_results :: results(items=${'$'}{items}, q=${'$'}{q})"
     }
 
     @GetMapping("/products/fragment")

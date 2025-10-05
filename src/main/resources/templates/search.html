@@ -1,0 +1,66 @@
+<!-- src/main/resources/templates/search.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Search products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+
+    <!-- Web Awesome + HTMX -->
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.6/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.6/dist/webawesome.loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <wa-icon name="magnifying-glass" style="font-size:1.25rem;"></wa-icon>
+        <h1>Search products</h1>
+    </div>
+</header>
+
+<main class="page">
+    <wa-card with-header class="wa-border-radius-l">
+        <h2 slot="header" style="margin:0;">Find by title</h2>
+
+        <!-- Search input triggers GET on each keystroke (debounced) -->
+        <div class="wa-stack wa-gap-m" style="padding: var(--wa-space-m);">
+            <label class="wa-stack wa-gap-2xs">
+                <span class="wa-label">Type to search</span>
+                <div class="wa-flank:end wa-align-items-center wa-gap-s">
+                    <input
+                            id="q"
+                            name="q"
+                            type="search"
+                            class="wa-input"
+                            placeholder="e.g. Jacket, Mesh, T-Shirt…"
+                            autocomplete="off"
+                            hx-get="/products/search"
+                            hx-target="#results"
+                            hx-trigger="keyup changed delay:300ms, search"
+                            hx-indicator="#searchSpinner"
+                            style="padding: var(--wa-space-s); border-radius: var(--wa-border-radius-m); border:1px solid var(--wa-color-border-quiet); width:100%;"
+                    />
+                    <wa-spinner id="searchSpinner" class="htmx-indicator" style="font-size:1rem;"></wa-spinner>
+                </div>
+            </label>
+
+            <!-- Results mount here -->
+            <div id="results">
+                <wa-callout class="wa-neutral" appearance="plain">
+                    <wa-icon slot="icon" name="lightbulb"></wa-icon>
+                    Start typing to see matching products.
+                </wa-callout>
+            </div>
+        </div>
+    </wa-card>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <small class="muted">&copy; <span th:text="${#dates.format(#dates.createNow(),'yyyy')}">2025</span> Greg’s products</small>
+    </div>
+</footer>
+</body>
+</html>

@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository
 
 interface ProductRepository : CrudRepository<Product, Long> {
     fun findByExternalId(externalId: Long): Product
+    fun findByNameContainingIgnoreCase(name: String): List<Product>
 }
 
 interface ProductVariantRepository : CrudRepository<ProductVariant, Long>
